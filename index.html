@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>7th Chord Master</title>
     <style>
-        /* 1. すべての要素ではみ出し計算を防止 */
-        * {
-            box-sizing: border-box; 
-        }
+        * { box-sizing: border-box; }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
@@ -16,52 +13,65 @@
             font-family: 'Arial', sans-serif; color: white;
         }
 
+        /* メインの4分割エリア */
         .container {
             display: flex;
             width: 100vw;
-            height: 80vh;
-            border: 2px solid #333; /* 外枠 */
+            height: 75vh; /* 操作エリア確保のため少し短く */
+            border-bottom: 2px solid #333;
         }
 
         .code-slot {
-            flex: 1;
+            /* 幅を25%で厳格に固定 */
+            width: 25%;
+            flex: 0 0 25%; 
             display: flex;
             align-items: center;
             justify-content: center;
             border-right: 2px solid #333;
-            overflow: hidden; /* はみ出た文字を隠す */
-            padding: 5px;
+            background-color: #1a1a1a;
         }
 
-        .code-slot:last-child {
-            border-right: none;
-        }
+        .code-slot:last-child { border-right: none; }
 
         .chord-name {
-            /* 2. 文字サイズを少し控えめに（8vw前後が安全） */
-            font-size: 8vw; 
+            /* 枠からはみ出さないサイズ */
+            font-size: 6vw; 
             font-weight: bold;
-            white-space: nowrap; /* 改行させない */
-            text-align: center;
+            white-space: nowrap;
         }
 
+        /* 下部の操作エリア */
         .controls {
-            width: 100vw; height: 20vh;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            width: 100vw;
+            height: 25vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* 中央寄せ */
             background-color: #222;
+            padding-bottom: env(safe-area-inset-bottom); /* iPhone等のノッチ対策 */
+        }
+
+        /* カウント表示をボタンの上に配置 */
+        .status {
+            font-size: 1.2rem; /* 少し大きく */
+            color: #aaa;
+            margin-bottom: 15px; /* ボタンとの間隔 */
         }
 
         button {
-            padding: 12px 40px; font-size: 1.5rem;
-            cursor: pointer; background-color: #2196F3;
-            color: white; border: none; border-radius: 50px;
+            padding: 15px 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 50px;
             box-shadow: 0 4px #1976D2;
         }
 
         button:active { transform: translateY(2px); box-shadow: 0 2px #1976D2; }
-
-        .status { font-size: 0.8rem; color: #888; margin-top: 5px; }
 
         @media screen and (orientation: portrait) {
             .portrait-warning { display: flex; }
@@ -74,17 +84,20 @@
     </style>
 </head>
 <body>
-    <!-- 中身（HTMLとScript）は前回と同じで大丈夫です -->
+
     <div class="portrait-warning">画面を横向きにしてください</div>
+
     <div class="container">
         <div id="slot0" class="code-slot"><span class="chord-name">-</span></div>
         <div id="slot1" class="code-slot"><span class="chord-name">-</span></div>
         <div id="slot2" class="code-slot"><span class="chord-name">-</span></div>
         <div id="slot3" class="code-slot"><span class="chord-name">-</span></div>
     </div>
+
     <div class="controls">
-        <button onclick="draw()">NEXT 4 CHORDS</button>
+        <!-- ボタンの上に配置して見落としを防止 -->
         <div id="status" class="status">残りのカード: 48/48</div>
+        <button onclick="draw()">NEXT</button>
     </div>
 
     <script>
@@ -112,6 +125,7 @@
             }
             document.getElementById('status').innerText = `残りのカード: ${deck.length}/48`;
         }
+
         deck = createDeck();
         draw();
     </script>
